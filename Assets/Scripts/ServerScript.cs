@@ -178,6 +178,7 @@ public class ServerScript : MonoBehaviour
         Callback(Response.Contains("Connected"));
     }
 
+    [Obsolete]
     public IEnumerator GrabImage(string FileName, string Path, Action<Texture2D> Callback)
     {
 
