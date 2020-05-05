@@ -10,17 +10,20 @@ public class ServerScript : MonoBehaviour
     public static ServerScript Instance;
     public static bool initialized;
     public string ServerAddress;
+    public bool IDValid = false;
 
     void Awake()
     {
         try
         {
             ServerAddress = System.IO.File.ReadAllText(Application.streamingAssetsPath + "/ServerAddress.txt");
+            Debug.Log("Connected");
         }
         catch
         {
             System.IO.File.WriteAllText(Application.streamingAssetsPath + "/ServerAddress.txt", "[Server Address]");
             ServerAddress = "ERROR";
+            Debug.Log("ERROR");
         }
         Instance = this;
     }
@@ -36,11 +39,11 @@ public class ServerScript : MonoBehaviour
             Callback(Response);
     }
 
-    public IEnumerator SetAppData(Action<string> Callback = null, string GUID = "", string AppName = "", string AppValues = "", Texture2D File = null, 
+    public IEnumerator SetAppData(Action<string> Callback = null, string GUID = "", string AppName = "", string AppValues = "", Texture2D File = null,
         string FileName = "", string DIRID = "", string QRID = "", Texture2D Selfie = null, Texture2D[] Photo = null, string NickName = "", string CharValues = "", string TimeUpdate = "", string DateUpdate = "")
     {
         string Response = "";
-        string URL = "http://" + ServerAddress + "/" + "Index.php";
+        string URL = "http://" + ServerAddress + "/" + "index.php";
         WWWForm Form = new WWWForm();
         Form.AddField("Function", "SetAppData");
         Form.AddField("GUID", GUID);
@@ -52,6 +55,7 @@ public class ServerScript : MonoBehaviour
         Form.AddField("QRID", QRID);
         Form.AddField("NickName", NickName);
         Form.AddField("CharValues", CharValues);
+        Form.AddField("DateUpdate", DateUpdate);
 
         if (File != null)
         {
@@ -82,7 +86,7 @@ public class ServerScript : MonoBehaviour
         if (File != null)
         {
             string Response = "";
-            string URL = "http://" + ServerAddress + "/" + "Index.php";
+            string URL = "http://" + ServerAddress + "/" + "index.php";
             WWWForm Form = new WWWForm();
             Form.AddField("Function", "UploadImage");
             Form.AddField("AppName", AppName);
@@ -115,7 +119,7 @@ public class ServerScript : MonoBehaviour
     {
         string Response = "";
         AppData[] AppData = null;
-        string URL = "http://" + ServerAddress + "/" + "Index   .php";
+        string URL = "http://" + ServerAddress + "/" + "Index.php";
         WWWForm Form = new WWWForm();
         Form.AddField("Function", "GetAppData");
         Form.AddField("GUID", GUID);
@@ -193,8 +197,30 @@ public class ServerScript : MonoBehaviour
         {
             Callback(null);
         }
+    }
 
+    public IEnumerator CheckData(string DirID)
+    {
+        string Response = "";
+        string URL = "http://" + ServerAddress + "/mom/" + "CheckData.php";
+        WWWForm form = new WWWForm();
+        form.AddField("DirID", DirID);
 
+        using (UnityWebRequest www = UnityWebRequest.Post(URL, form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.isNetworkError || www.isHttpError)
+            {
+                Debug.Log(www.error);
+                IDValid = true;
+            }
+            else
+            {
+                Debug.Log(www.downloadHandler.text);
+                IDValid = false;
+            }
+        }
     }
 
     [System.Serializable]
