@@ -37,7 +37,7 @@ function SetAppData(){
 	$Connection = Database();
 	$IsDataExist = false;
 	if($DIRID != ""){
-		$SQL = "SELECT * FROM `appdata` WHERE GUID='$DIRID'";
+		$SQL = "SELECT * FROM 'appdata' WHERE GUID='$DIRID'";
 		$Result = $Connection->query($SQL);
 		$IsDataExist = $Result->num_rows  > 0? true:false;
 	}else{
@@ -49,9 +49,9 @@ function SetAppData(){
 	}	
 	
 	if ($IsDataExist) {
-		$SQL = "UPDATE `appdata` SET `QRID`='$QRID',`NickName`='$NickName', 'CharValues'='$CharValues' WHERE DIRID='$DIRID'";
+		$SQL = "UPDATE 'appdata' SET 'QRID'='$QRID','NickName'='$NickName', 'CharValues'='$CharValues' WHERE DIRID='$DIRID'";
 	}else{
-		$SQL = "INSERT INTO `appdata`(`QRID`,`NickName`,'CharValues',`DIRID`) VALUES ('$QRID','$NickName','$CharValues','$DIRID' )";
+		$SQL = "INSERT INTO 'appdata'('QRID','NickName','CharValues','DIRID') VALUES ('$QRID','$NickName','$CharValues','$DIRID' )";
 	}
 	
 	if ($Connection->query($SQL) === TRUE) {
@@ -77,15 +77,15 @@ function GetAppData(){
 	$DateUpdated = GetValue('DateUpdated');
 
 	$PLUS = "";
-	$PLUS = $PLUS . ($DIRD != ""? "and `DIRID` = '$DIRID'":"");
-	$PLUS = $PLUS . ($QRID != ""? "and `QRID` = '$QRID'":"");
-	$PLUS = $PLUS . ($NickName != ""? "and `NickName` = '$NickName'":"");
-	$PLUS = $PLUS . ($CharValues != ""? "and `CharValues` = '$CharValues'":"");
+	$PLUS = $PLUS . ($DIRD != ""? "and 'DIRID' = '$DIRID'":"");
+	$PLUS = $PLUS . ($QRID != ""? "and 'QRID' = '$QRID'":"");
+	$PLUS = $PLUS . ($NickName != ""? "and 'NickName' = '$NickName'":"");
+	$PLUS = $PLUS . ($CharValues != ""? "and 'CharValues' = '$CharValues'":"");
 	$PLUS = $PLUS . ($TimeUpdated != ""? "and TimeUpdated = 'TimeUpdated'":"");
 	$PLUS = $PLUS . ($DateUpdated != ""? "and DateUpdated = 'DateUpdated'":"");
 	
 	$Connection = Database();
-	$SQL = "SELECT * FROM `appdata` WHERE 1 $PLUS order by DateUpdated desc";
+	$SQL = "SELECT * FROM 'appdata' WHERE 1 $PLUS order by DateUpdated desc";
 	
 	$Result = $Connection->query($SQL);
 	if ($Result->num_rows > 0) {
