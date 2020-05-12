@@ -11,6 +11,7 @@ public class ServerScript : MonoBehaviour
     public static bool initialized;
     public string ServerAddress;
     public bool IDValid = false;
+    public ApplicationManager Manager;
 
     void Awake()
     {
@@ -59,7 +60,7 @@ public class ServerScript : MonoBehaviour
 
         if (File != null)
         {
-            //Form.AddField("FileName", FileName == "" ? GUID : "");
+            Form.AddField("FileName", FileName == "" ? GUID : "");
             //Form.AddBinaryData("FileBytes", File.EncodeToJPG(), FileName);
             Form.AddField("FileName", FileName == "" ? DIRID : "");
             Form.AddBinaryData("FileBytes", File.EncodeToJPG(), FileName);
@@ -181,7 +182,7 @@ public class ServerScript : MonoBehaviour
         }
         Callback(Response.Contains("Connected"));
     }
-
+   
     [Obsolete]
     public IEnumerator GrabImage(string FileName, string Path, Action<Texture2D> Callback)
     {
@@ -215,11 +216,66 @@ public class ServerScript : MonoBehaviour
             {
                 Debug.Log(www.error);
                 IDValid = true;
+                Manager.output.text = "" + www.error;
             }
             else
             {
                 Debug.Log(www.downloadHandler.text);
                 IDValid = false;
+                Manager.output.text = "" + www.downloadHandler.text;
+            }
+        }
+    }
+
+    public IEnumerator SubmitData(string DIRID, string QRID, string NickName, int CharValues, string DateUpdate)
+    {
+        Debug.Log("Accessing SubmitData.php");
+        string URL = "http://" + ServerAddress + "/mom/" + "SubmitData.php";
+        //string URL = "http://" + ServerAddress;
+        WWWForm form = new WWWForm();
+        form.AddField("DIRID", DIRID);
+        form.AddField("QRID", QRID);
+        form.AddField("NickName", NickName);
+        form.AddField("CharValues", CharValues);
+        form.AddField("DateUpdate", DateUpdate);
+
+        using (UnityWebRequest www = UnityWebRequest.Post(URL, form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.isNetworkError || www.isHttpError)
+            {
+                Debug.Log(www.error);
+                Manager.output.text = "" + www.error;
+            }
+            else
+            {
+                Debug.Log(www.downloadHandler.text);
+                Manager.output.text = "" + www.downloadHandler.text;
+            }
+        }
+    }
+
+    public IEnumerator GetData(string DIRID)
+    {
+        string URL = "http://" + ServerAddress + "/mom/" + "GetData.php";
+        //string URL = "http://" + ServerAddress;
+        WWWForm form = new WWWForm();
+        form.AddField("DIRID", DIRID);
+
+        using (UnityWebRequest www = UnityWebRequest.Post(URL, form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.isNetworkError || www.isHttpError)
+            {
+                Debug.Log(www.error);
+                Manager.output.text = "" + www.error;
+            }
+            else
+            {
+                Debug.Log(www.downloadHandler.text);
+                Manager.output.text = "" + www.downloadHandler.text;
             }
         }
     }
