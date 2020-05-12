@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class ApplicationManager : MonoBehaviour
+namespace MOMmain
 {
+<<<<<<< HEAD
     public ServerScript Server;
     public InputField InputDIRID;
     public InputField InputQRID;
@@ -63,5 +64,21 @@ public class ApplicationManager : MonoBehaviour
         DateTime DateUpdate = DateTime.Now;
         DateNow = DateUpdate.ToString("yyyy-MM-dd");
         //Submit();
+=======
+    public class ApplicationManager : MonoBehaviour
+    {
+        public ServerScript Server;
+        public InputField InputID;
+
+        public void CheckIDValidity()
+        {
+            StartCoroutine(Server.CheckData(InputID.text));
+        }
+
+        void ShowDBParameters()
+        {
+
+        }
+>>>>>>> b85490ddd0131431d0a381cdcd080af086543fcd
     }
 }
