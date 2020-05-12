@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ApplicationManager : MonoBehaviour
+namespace MOMmain
 {
-    public ServerScript Server;
-    public InputField InputID;
-
-    public void CheckIDValidity()
+    public class ApplicationManager : MonoBehaviour
     {
-        StartCoroutine(Server.CheckData(InputID.text));
-    }
+        public ServerScript Server;
+        public InputField InputID;
 
-    void ShowDBParameters()
-    {
+        public void CheckIDValidity()
+        {
+            StartCoroutine(Server.CheckData(InputID.text));
+        }
 
+        void ShowDBParameters()
+        {
+
+        }
     }
 }
